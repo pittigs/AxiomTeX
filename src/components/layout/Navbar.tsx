@@ -514,12 +514,27 @@ export const Navbar: React.FC<NavbarProps> = ({
         {userProfile && (
           <button
             onClick={onOpenAccount}
-            className="flex items-center space-x-1.5 p-1 rounded-xl hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition cursor-pointer ml-1"
-            title={`${userProfile.name} - Benutzerkonto & Einstellungen`}
+            className={`flex items-center space-x-1.5 px-2 py-1 rounded-xl border transition cursor-pointer ml-1 ${
+              userProfile.deploymentMode === 'on-premise'
+                ? 'bg-cyan-950/30 border-cyan-700/50 hover:bg-cyan-900/40 text-cyan-300'
+                : 'bg-indigo-950/30 border-indigo-700/40 hover:bg-indigo-900/40 text-indigo-300'
+            }`}
+            title={
+              userProfile.deploymentMode === 'on-premise'
+                ? `🏢 On-Premises Server (${userProfile.onPremConfig?.serverUrl || 'Lokal'}) • Klicke für Einstellungen`
+                : '⚡ On-Demand Modus (Kein Login erforderlich • 100% lokal im Browser) • Klicke für Einstellungen'
+            }
           >
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-[10px] text-white shadow">
-              {userProfile.avatar || 'MM'}
+            <div className={`w-5 h-5 rounded-md flex items-center justify-center font-bold text-[9px] text-white shadow ${
+              userProfile.deploymentMode === 'on-premise'
+                ? 'bg-gradient-to-tr from-cyan-600 to-teal-400'
+                : 'bg-gradient-to-tr from-indigo-500 to-cyan-400'
+            }`}>
+              {userProfile.avatar || (userProfile.deploymentMode === 'on-premise' ? 'OP' : 'OD')}
             </div>
+            <span className="text-[11px] font-medium hidden md:inline">
+              {userProfile.deploymentMode === 'on-premise' ? 'On-Premise' : 'On-Demand'}
+            </span>
           </button>
         )}
 

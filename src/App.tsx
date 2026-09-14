@@ -156,31 +156,16 @@ export const App: React.FC = () => {
 
   // 6. Generic Git Integration State
   const [gitConfig, setGitConfig] = useState<GitConfig>({
-    remoteUrl: 'https://gitlab.tu-berlin.de/systems/opentex-paper.git',
+    remoteUrl: '',
     branch: 'main',
-    authorName: 'Maximilian Müller',
-    authorEmail: 'max.mueller@tum.de',
-    isConnected: true,
-    lastSync: 'Gerade eben',
-    unpushedCommits: 1,
+    authorName: '',
+    authorEmail: '',
+    isConnected: false,
+    lastSync: 'Nicht verknüpft',
+    unpushedCommits: 0,
   });
 
-  const [commits, setCommits] = useState<GitCommit[]>([
-    {
-      hash: '9a3f2b1',
-      message: 'feat: add mathematical formulation for CRDT convergence',
-      author: 'Maximilian Müller',
-      timestamp: 'Vor 2 Stunden',
-      filesChanged: 2,
-    },
-    {
-      hash: '4e8c110',
-      message: 'chore: initial IEEEtran template setup',
-      author: 'Dr. Elena Schmidt',
-      timestamp: 'Gestern',
-      filesChanged: 3,
-    },
-  ]);
+  const [commits, setCommits] = useState<GitCommit[]>([]);
 
   // 7. Review & Track Changes State
   const [comments, setComments] = useState<DocumentComment[]>([

@@ -110,6 +110,18 @@ export interface AiProviderConfig {
   endpoint?: string;
 }
 
+// On-Premises & Server Configuration Types
+export interface OnPremConfig {
+  serverUrl: string;
+  compilerEngine: 'client-katex' | 'remote-texlive';
+  remoteCompilerUrl: string;
+  authType: 'none' | 'bearer' | 'basic';
+  authToken: string;
+  customHeaderName?: string;
+  customHeaderValue?: string;
+  syncBackend: 'local-browser' | 'onprem-server' | 'webdav-nextcloud';
+}
+
 // User Profile & Account Types
 export interface UserProfile {
   id: string;
@@ -120,9 +132,11 @@ export interface UserProfile {
   affiliation: string;
   orcid?: string;
   bio?: string;
-  plan: 'OpenTeX Community' | 'OpenTeX Academic Pro' | 'Campus License';
+  plan: 'OpenTeX Community' | 'OpenTeX Academic Pro' | 'Campus License' | 'OpenTeX On-Demand';
   storageUsedMb: number;
   storageLimitMb: number;
+  deploymentMode: 'on-demand' | 'on-premise';
+  onPremConfig?: OnPremConfig;
   gitUsername?: string;
   gitEmail?: string;
   gitToken?: string;

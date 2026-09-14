@@ -171,16 +171,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <button
             onClick={onOpenAccountClick}
             className="flex items-center space-x-2.5 p-1.5 pr-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-blue-500/50 hover:bg-slate-850 transition text-left cursor-pointer group"
+            title="Einstellungen, Profil & On-Premises Server konfigurieren"
           >
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-xs text-white shadow">
-              {userProfile.avatar || 'MM'}
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs text-white shadow ${
+              userProfile.deploymentMode === 'on-premise'
+                ? 'bg-gradient-to-tr from-cyan-600 to-teal-400'
+                : 'bg-gradient-to-tr from-blue-500 to-indigo-600'
+            }`}>
+              {userProfile.avatar || (userProfile.deploymentMode === 'on-premise' ? 'OP' : 'OD')}
             </div>
             <div className="hidden sm:block">
               <span className="block text-xs font-semibold text-slate-200 group-hover:text-white transition leading-tight">
                 {userProfile.name}
               </span>
-              <span className="block text-[10px] text-slate-500 truncate max-w-[120px]">
-                {userProfile.role}
+              <span className="block text-[10px] text-slate-400 truncate max-w-[120px]">
+                {userProfile.deploymentMode === 'on-premise' ? '🏢 On-Premises' : '⚡ On-Demand'}
               </span>
             </div>
           </button>
@@ -277,30 +282,38 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800/80 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">
-                Benutzerkonto
+                {userProfile.deploymentMode === 'on-premise' ? '🏢 Server-Modus' : '⚡ On-Demand'}
               </span>
               <button
                 onClick={onOpenAccountClick}
                 className="text-[11px] text-blue-400 hover:text-blue-300 transition cursor-pointer flex items-center gap-0.5"
               >
-                Verwalten <ChevronRight className="w-3 h-3" />
+                Konfigurieren <ChevronRight className="w-3 h-3" />
               </button>
             </div>
 
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-xs text-white shadow">
-                {userProfile.avatar}
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs text-white shadow ${
+                userProfile.deploymentMode === 'on-premise'
+                  ? 'bg-gradient-to-tr from-cyan-600 to-teal-400'
+                  : 'bg-gradient-to-tr from-blue-500 to-indigo-600'
+              }`}>
+                {userProfile.avatar || (userProfile.deploymentMode === 'on-premise' ? 'OP' : 'OD')}
               </div>
               <div className="truncate">
                 <span className="block text-xs font-bold text-white truncate">{userProfile.name}</span>
-                <span className="block text-[11px] text-slate-400 truncate">{userProfile.affiliation}</span>
+                <span className="block text-[11px] text-slate-400 truncate">
+                  {userProfile.deploymentMode === 'on-premise'
+                    ? (userProfile.onPremConfig?.serverUrl || 'On-Premises Server')
+                    : '100% lokal im Browser'}
+                </span>
               </div>
             </div>
 
             <div className="pt-2 border-t border-slate-800/80 space-y-1.5">
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-slate-400 flex items-center gap-1">
-                  <HardDrive className="w-3 h-3 text-slate-500" /> Cloud-Speicher
+                  <HardDrive className="w-3 h-3 text-slate-500" /> Browser-Speicher
                 </span>
                 <span className="text-slate-300 font-medium">{userProfile.storageUsedMb} MB / 5 GB</span>
               </div>
@@ -322,7 +335,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               className="flex items-center space-x-1.5 hover:text-white transition"
             >
               <GitBranch className="w-4 h-4" />
-              <span>AxiomTeX GitHub</span>
+              <span>OpenTeX GitHub</span>
             </a>
             <span className="text-[10px] text-slate-500 font-mono">v1.2</span>
           </div>

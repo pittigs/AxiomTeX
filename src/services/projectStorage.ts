@@ -1,4 +1,4 @@
-import type { ProjectSummary, UserProfile, Collaborator } from '../types';
+import type { ProjectSummary, UserProfile } from '../types';
 import { ALL_TEMPLATES, IEEE_TEMPLATE, EXAM_TEMPLATE, THESIS_TEMPLATE } from '../templates/latexTemplates';
 
 const STORAGE_PROJECTS_KEY = 'opentex_projects_v1';
@@ -6,19 +6,30 @@ const STORAGE_PROFILE_KEY = 'opentex_user_profile_v1';
 const STORAGE_ACTIVE_PROJECT_KEY = 'opentex_active_project_id_v1';
 
 export const DEFAULT_USER_PROFILE: UserProfile = {
-  id: 'usr-1',
-  name: 'Maximilian Müller',
-  email: 'max.mueller@opentex.org',
-  avatar: 'MM',
-  role: 'Wissenschaftlicher Mitarbeiter / PhD Candidate',
-  affiliation: 'Universität / Forschungsinstitut',
-  orcid: '0000-0002-8419-3281',
-  bio: 'Forschungsschwerpunkte: Verteilte Systeme, CRDTs und wissenschaftliches Publizieren.',
-  plan: 'OpenTeX Academic Pro',
-  storageUsedMb: 38.4,
+  id: 'usr-ondemand',
+  name: 'On-Demand Gast',
+  email: '',
+  avatar: 'OD',
+  role: 'On-Demand Autor',
+  affiliation: 'Lokal (Browser-Sitzung)',
+  orcid: '',
+  bio: 'Arbeitet lokal im On-Demand Browser-Modus. Keine Registrierung oder Server-Konto erforderlich.',
+  plan: 'OpenTeX On-Demand',
+  storageUsedMb: 14.2,
   storageLimitMb: 5120, // 5 GB
-  gitUsername: 'pittigs',
-  gitEmail: 'max.mueller@opentex.org',
+  deploymentMode: 'on-demand',
+  onPremConfig: {
+    serverUrl: 'http://localhost:8080',
+    compilerEngine: 'client-katex',
+    remoteCompilerUrl: 'http://localhost:8080/api/compile',
+    authType: 'none',
+    authToken: '',
+    customHeaderName: '',
+    customHeaderValue: '',
+    syncBackend: 'local-browser',
+  },
+  gitUsername: '',
+  gitEmail: '',
   gitToken: '',
   aiKeys: {
     openai: '',
@@ -28,43 +39,20 @@ export const DEFAULT_USER_PROFILE: UserProfile = {
   },
 };
 
-const DEFAULT_COLLABORATORS: Collaborator[] = [
-  {
-    id: 'collab-1',
-    name: 'Dr. Elena Schmidt',
-    color: '#0284c7',
-    avatar: 'ES',
-    role: 'editor',
-    currentFileId: 'file-1',
-    cursorLine: 42,
-    status: 'online',
-  },
-  {
-    id: 'collab-2',
-    name: 'Alex Weber',
-    color: '#8b5cf6',
-    avatar: 'AW',
-    role: 'viewer',
-    currentFileId: 'file-2',
-    cursorLine: 18,
-    status: 'idle',
-  },
-];
-
 const INITIAL_PROJECTS: ProjectSummary[] = [
   {
     id: 'proj-crdt-ieee',
-    name: 'OpenTeX CRDT Ecosystem Paper',
-    description: 'IEEE Transactions on Software Engineering Submission: High-Performance Decentralized LaTeX.',
+    name: 'OpenTeX Publication (IEEE Template)',
+    description: 'IEEE Transactions LaTeX Template mit 2-Spalten-Layout, Formeln, Tabellen und BibTeX.',
     category: 'Paper',
-    lastModified: 'Vor 12 Minuten',
+    lastModified: 'Gerade eben',
     updatedAt: Date.now() - 12 * 60 * 1000,
     isStarred: true,
     isArchived: false,
-    isShared: true,
-    ownerId: 'usr-1',
+    isShared: false,
+    ownerId: 'usr-ondemand',
     files: IEEE_TEMPLATE.files,
-    collaborators: DEFAULT_COLLABORATORS,
+    collaborators: [],
   },
   {
     id: 'proj-academic-exam',
@@ -76,7 +64,7 @@ const INITIAL_PROJECTS: ProjectSummary[] = [
     isStarred: true,
     isArchived: false,
     isShared: false,
-    ownerId: 'usr-1',
+    ownerId: 'usr-ondemand',
     files: EXAM_TEMPLATE.files,
     collaborators: [],
   },
@@ -89,10 +77,10 @@ const INITIAL_PROJECTS: ProjectSummary[] = [
     updatedAt: Date.now() - 24 * 3600 * 1000,
     isStarred: false,
     isArchived: false,
-    isShared: true,
-    ownerId: 'usr-1',
+    isShared: false,
+    ownerId: 'usr-ondemand',
     files: THESIS_TEMPLATE.files,
-    collaborators: [DEFAULT_COLLABORATORS[0]],
+    collaborators: [],
   },
 ];
 
@@ -138,7 +126,32 @@ export function loadUserProfile(): UserProfile {
       saveUserProfile(DEFAULT_USER_PROFILE);
       return DEFAULT_USER_PROFILE;
     }
-    return { ...DEFAULT_USER_PROFILE, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw);
+    // Migration: If old mock profile (Maximilian Müller or usr-1 or missing deploymentMode), migrate to clean on-demand
+    if (parsed.id === 'usr-1' || parsed.name === 'Maximilian Müller' || !parsed.deploymentMode) {
+      const migrated: UserProfile = {
+        ...DEFAULT_USER_PROFILE,
+        ...parsed,
+        id: parsed.id === 'usr-1' ? DEFAULT_USER_PROFILE.id : parsed.id,
+        name: parsed.name === 'Maximilian Müller' ? DEFAULT_USER_PROFILE.name : (parsed.name || DEFAULT_USER_PROFILE.name),
+        email: parsed.email === 'max.mueller@opentex.org' ? '' : (parsed.email || ''),
+        avatar: parsed.avatar === 'MM' ? 'OD' : (parsed.avatar || 'OD'),
+        role: parsed.role === 'Wissenschaftlicher Mitarbeiter / PhD Candidate' ? DEFAULT_USER_PROFILE.role : (parsed.role || DEFAULT_USER_PROFILE.role),
+        affiliation: parsed.affiliation === 'Universität / Forschungsinstitut' ? DEFAULT_USER_PROFILE.affiliation : (parsed.affiliation || DEFAULT_USER_PROFILE.affiliation),
+        plan: parsed.plan === 'OpenTeX Academic Pro' ? 'OpenTeX On-Demand' : (parsed.plan || 'OpenTeX On-Demand'),
+        gitUsername: parsed.gitUsername === 'pittigs' ? '' : (parsed.gitUsername || ''),
+        gitEmail: parsed.gitEmail === 'max.mueller@opentex.org' ? '' : (parsed.gitEmail || ''),
+        deploymentMode: parsed.deploymentMode || 'on-demand',
+        onPremConfig: { ...DEFAULT_USER_PROFILE.onPremConfig, ...(parsed.onPremConfig || {}) },
+      };
+      saveUserProfile(migrated);
+      return migrated;
+    }
+    return {
+      ...DEFAULT_USER_PROFILE,
+      ...parsed,
+      onPremConfig: { ...DEFAULT_USER_PROFILE.onPremConfig, ...(parsed.onPremConfig || {}) }
+    };
   } catch {
     return DEFAULT_USER_PROFILE;
   }

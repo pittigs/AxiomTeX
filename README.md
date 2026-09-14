@@ -23,7 +23,8 @@
 
 **OpenTeX** is an open-source, client-first LaTeX authoring environment designed for researchers, students, and engineers. It combines the power of Microsoft's **Monaco Editor** with instant client-side math and document rendering (**KaTeX**), an integrated **AI Scientific Writing Assistant**, collaborative **Review & Suggestion panels**, and seamless **PDF/ZIP exports**.
 
-Everything runs directly in your browser without requiring a heavy local TeXLive installation.
+- **⚡ On-Demand Web Edition (GitHub Pages):** Runs 100% in your browser. Zero registration or user account required—open and start writing instantly with local, private storage.
+- **🏢 On-Premises & Self-Hosted Ready:** Easily configure custom backend server URLs, remote TeXLive engines, internal auth tokens, self-hosted Ollama/vLLM AI, and private GitLab/Gitea repositories.
 
 ---
 
@@ -38,10 +39,11 @@ Everything runs directly in your browser without requiring a heavy local TeXLive
   - Full-featured IDE experience (syntax highlighting, bracket matching, minimap, multi-cursor).
   - Quick-insert toolbars for mathematical symbols, greek letters, matrix templates, and structural tags.
 
-- **🤖 AI Scientific Writing Assistant**
+- **🤖 AI Scientific Writing Assistant & Local LLM**
   - Proofread and refine academic tone for clarity and conciseness.
   - Natural-language LaTeX math formula generator.
   - Automated abstract summarizer and BibTeX citation formatting.
+  - Supports self-hosted **Ollama / vLLM** endpoints (100% offline & GDPR compliant) alongside OpenAI and Google Gemini.
 
 - **📝 Peer Review & Change Tracking**
   - In-line change proposals with diff visualization.
@@ -56,15 +58,19 @@ Everything runs directly in your browser without requiring a heavy local TeXLive
   - High-resolution PDF export (A4 paper formatting).
   - Single-click `.tex` source download and full `.zip` project bundling.
 
-- **📚 Pre-Built Academic Templates**
+- **📚 Standard Academic Publication Templates**
   - **IEEE Conference / Journal Paper** (two-column IEEEtran layout).
+  - **ACM Conference Proceedings** (acmart / sigconf layout with CCS concepts & ACM reference format).
+  - **Standard Academic Research Article & Preprint** (clean single-column research layout).
   - **Master's Thesis / Dissertation** (academic book/report structure).
-  - **Standard Academic Article** (clean single-column research layout).
+  - **Beamer Modern Presentation Slides** (16:9 widescreen presentation layout).
+  - **Academic CV & Resume** (modern curriculum vitae for researchers).
   - **University Exam & Homework Template** (custom header and problem boxes).
 
-- **🐳 Production Ready**
+- **🐳 On-Premises & Production Ready**
   - Multi-stage Alpine Dockerfile with production Nginx reverse proxy.
   - Docker Compose configuration ready for one-command self-hosting.
+  - Full on-premises customization modal for server URLs, compilation backends, and storage.
 
 ---
 

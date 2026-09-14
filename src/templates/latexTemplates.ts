@@ -27,15 +27,15 @@ export const IEEE_TEMPLATE: LaTeXTemplate = {
 
 \\title{OpenTeX: A High-Performance Decentralized Open-Source Collaborative LaTeX Ecosystem}
 
-\\author{Maximilian~Müller,~\\IEEEmembership{Member,~IEEE,}
-        Sarah~Al-Mansoor,~\\IEEEmembership{Senior~Member,~IEEE,}
-        and~Chen~Wei,~\\IEEEmembership{Fellow,~IEEE}%
-\\thanks{M. Müller is with the Department of Computer Science, Technical University of Munich, Germany (e-mail: max.mueller@tum.de).}%
-\\thanks{S. Al-Mansoor and C. Wei are with the Distributed Systems Institute, ETH Zurich, Switzerland.}%
+\\author{Author~One,~\\IEEEmembership{Member,~IEEE,}
+        Author~Two,~\\IEEEmembership{Senior~Member,~IEEE,}
+        and~Author~Three,~\\IEEEmembership{Fellow,~IEEE}%
+\\thanks{Author One is with the Department of Computer Science, University of Technology (e-mail: author.one@university.edu).}%
+\\thanks{Author Two and Author Three are with the Distributed Systems Institute, Research University.}%
 }
 
-\\markboth{IEEE Transactions on Software Engineering,~Vol.~42, No.~8, September~2026}%
-{Müller \\MakeLowercase{\\textit{et al.}}: OpenTeX: High-Performance Open-Source Collaborative LaTeX}
+\\markboth{IEEE Transactions on Software Engineering,~Vol.~42, No.~8, 2026}%
+{Author \\MakeLowercase{\\textit{et al.}}: OpenTeX: High-Performance Open-Source Collaborative LaTeX}
 
 \\maketitle
 
@@ -350,7 +350,7 @@ export const CV_TEMPLATE: LaTeXTemplate = {
 \\section{Ausgewählte Publikationen}
 \\begin{enumerate}[leftmargin=1.5em,noitemsep]
   \\item \\textbf{Hoffmann, T.} et al. (2025). \\textit{High-Throughput CRDT Architectures in WebAssembly}. IEEE TSE.
-  \\item \\textbf{Hoffmann, T.}, Müller, M. (2024). \\textit{Sub-linear Conflict Resolution in Distributed Systems}. NeurIPS.
+  \\item \\textbf{Hoffmann, T.}, Schmidt, E. (2024). \\textit{Sub-linear Conflict Resolution in Distributed Systems}. NeurIPS.
 \\end{enumerate}
 
 \\end{document}`
@@ -540,8 +540,215 @@ A web service receives $N$ requests during a one-minute interval, where $N \\sim
   ]
 };
 
+export const ACM_TEMPLATE: LaTeXTemplate = {
+  id: 'acm-conference',
+  title: 'ACM Conference Paper (sigconf)',
+  description: 'Offizielle Vorlage für ACM-Konferenzen (acmart) mit CCS-Klassifikation, ACM-Referenzformat und BibTeX.',
+  category: 'Paper',
+  author: 'Association for Computing Machinery (ACM)',
+  icon: 'FileText',
+  files: [
+    {
+      id: 'acm-1',
+      name: 'main.tex',
+      path: '/main.tex',
+      isFolder: false,
+      type: 'tex',
+      content: `\\documentclass[sigconf]{acmart}
+
+\\usepackage{amsmath,amssymb}
+\\usepackage{booktabs}
+\\usepackage{microtype}
+
+\\acmConference[SIGOPS '26]{ACM Symposium on Operating Systems Principles}{October 2026}{Munich, Germany}
+\\acmYear{2026}
+\\copyrightyear{2026}
+
+\\title{Scalable Collaborative LaTeX Environments via Conflict-Free Replicated Data Types}
+
+\\author{Firstname Lastname}
+\\affiliation{%
+  \\institution{University of Technology}
+  \\department{Department of Computer Science}
+  \\city{Berlin}
+  \\country{Germany}
+}
+\\email{author@university.edu}
+
+\\author{Co-Author Name}
+\\affiliation{%
+  \\institution{Research Institute of Science}
+  \\city{Zurich}
+  \\country{Switzerland}
+}
+\\email{coauthor@institute.org}
+
+\\begin{document}
+
+\\begin{abstract}
+Real-time collaborative editing of scientific manuscripts requires robust consistency models and low latency. In this paper, we evaluate decentralized document composition using CRDTs and WebAssembly compilation runtimes. Our empirical benchmarks across 1,000 concurrent editing sessions show that conflict-free delta replication achieves sub-40ms end-to-end synchronization with zero typographic regressions.
+\\end{abstract}
+
+\\begin{CCSXML}
+<ccs2012>
+ <concept>
+  <concept_id>10011007.10011074.10011092</concept_id>
+  <concept_desc>Software and its engineering~Collaboration in software development</concept_desc>
+  <concept_significance>500</concept_significance>
+ </concept>
+</ccs2012>
+\\end{CCSXML}
+
+\\ccsdesc[500]{Software and its engineering~Collaboration in software development}
+
+\\keywords{LaTeX, CRDT, Real-Time Systems, Scientific Publishing, ACM}
+
+\\maketitle
+
+\\section{Introduction}
+Modern scientific collaboration necessitates immediate feedback loops and high typesetting quality \\cite{lamport1984latex}. Standard proprietary cloud editors often impose bandwidth and compute constraints on large academic documents.
+
+\\section{Methodology}
+We define the synchronization state space $\\mathcal{S}$ and evaluate operational convergence under high packet loss.
+
+\\begin{equation}
+\\lim_{t \\to \\infty} \\mathbb{P}(\\mathcal{S}_A(t) = \\mathcal{S}_B(t)) = 1
+\\end{equation}
+
+\\section{Evaluation & Results}
+Table~\\ref{tab:latency} summarizes the measured latencies across global network clusters.
+
+\\begin{table}[htbp]
+\\caption{Benchmark Results: Synchronization Latency}
+\\label{tab:latency}
+\\begin{tabular}{lrr}
+\\toprule
+\\textbf{Cluster} & \\textbf{P95 Latency} & \\textbf{P99 Latency} \\\\
+\\midrule
+Local Network & 4.2 ms & 7.8 ms \\\\
+Trans-Atlantic & 68.4 ms & 82.1 ms \\\\
+Asia-Pacific & 112.0 ms & 134.5 ms \\\\
+\\bottomrule
+\\end{tabular}
+\\end{table}
+
+\\section{Conclusion}
+Our architecture provides a robust foundation for next-generation decentralized academic authoring tools.
+
+\\bibliographystyle{ACM-Reference-Format}
+\\bibliography{references}
+
+\\end{document}`
+    },
+    {
+      id: 'acm-2',
+      name: 'references.bib',
+      path: '/references.bib',
+      isFolder: false,
+      type: 'bib',
+      content: `@article{lamport1984latex,
+  title={LaTeX: A Document Preparation System},
+  author={Lamport, Leslie},
+  journal={Addison-Wesley Professional},
+  year={1984}
+}
+
+@article{shapiro2011crdt,
+  title={Conflict-free Replicated Data Types},
+  author={Shapiro, Marc and Pregui{\\c{c}}a, Nuno and Baquero, Carlos and Zawirski, Marek},
+  journal={Symposium on Self-Stabilizing Systems},
+  pages={386--400},
+  year={2011},
+  publisher={Springer}
+}`
+    }
+  ]
+};
+
+export const ARTICLE_TEMPLATE: LaTeXTemplate = {
+  id: 'standard-article',
+  title: 'Wissenschaftlicher Fachartikel / Preprint',
+  description: 'Klassisches einspaltiges Standard-Layout für wissenschaftliche Publikationen, Preprints (arXiv, Elsevier, Springer) und Fachberichte.',
+  category: 'Paper',
+  author: 'Standard Academic Article',
+  icon: 'FileText',
+  files: [
+    {
+      id: 'art-1',
+      name: 'main.tex',
+      path: '/main.tex',
+      isFolder: false,
+      type: 'tex',
+      content: `\\documentclass[11pt,a4paper]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage[margin=2.5cm]{geometry}
+\\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\\usepackage{graphicx}
+\\usepackage{booktabs}
+\\usepackage{hyperref}
+\\usepackage{cite}
+
+\\newtheorem{theorem}{Theorem}
+\\newtheorem{lemma}[theorem]{Lemma}
+
+\\title{\\textbf{On the Foundations of Decentralized Document Typesetting}}
+\\author{
+  \\textbf{Firstname Lastname}\\textsuperscript{1}, 
+  \\textbf{Co-Author Name}\\textsuperscript{2} \\\\[4pt]
+  \\small \\textsuperscript{1}Department of Mathematics and Computer Science, University Institute \\\\
+  \\small \\textsuperscript{2}Center for Advanced Scientific Research \\\\
+  \\small \\texttt{\\{author, coauthor\\}@institution.edu}
+}
+\\date{\\today}
+
+\\begin{document}
+
+\\maketitle
+
+\\begin{abstract}
+We present a rigorous treatment of real-time collaborative document compilation under Byzantine and non-Byzantine network partitions. By demonstrating that mathematical typesetting syntax maps homomorphically to linear tree structures, we establish formal bounds on state convergence. Empirical evaluations confirm sub-second total compilation cycles on standard desktop browsers without server dependencies.
+\\end{abstract}
+
+\\section{Introduction}
+Scientific publishing requires typesetting fidelity and accessible tools \\cite{knuth1984tex}. We examine the formal convergence properties of decentralized collaborative LaTeX pipelines.
+
+\\section{Mathematical Model}
+Let $(\\mathcal{L}, \\le)$ be a complete lattice of document fragments.
+\\begin{theorem}
+For any finite set of concurrent document edits $\\mathcal{E} = \\{e_1, e_2, \\dots, e_k\\}$, the merged state satisfies:
+\\begin{equation}
+\\bigsqcup_{i=1}^k \\phi(e_i) = \\phi\\left(\\bigcup_{i=1}^k e_i\\right)
+\\end{equation}
+\\end{theorem}
+
+\\section{Discussion & Outlook}
+The theoretical bounds hold across arbitrary document sizes, providing a sound foundation for open-source collaborative publishing.
+
+\\bibliographystyle{plain}
+\\bibliography{references}
+
+\\end{document}`
+    },
+    {
+      id: 'art-2',
+      name: 'references.bib',
+      path: '/references.bib',
+      isFolder: false,
+      type: 'bib',
+      content: `@article{knuth1984tex,
+  title={The TeXbook},
+  author={Knuth, Donald Ervin},
+  journal={Addison-Wesley},
+  year={1984}
+}`
+    }
+  ]
+};
+
 export const ALL_TEMPLATES: LaTeXTemplate[] = [
   IEEE_TEMPLATE,
+  ACM_TEMPLATE,
+  ARTICLE_TEMPLATE,
   THESIS_TEMPLATE,
   BEAMER_TEMPLATE,
   CV_TEMPLATE,
