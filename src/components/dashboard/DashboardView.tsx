@@ -21,12 +21,13 @@ import {
   HardDrive,
   Lock
 } from 'lucide-react';
-import type { ProjectSummary, UserProfile } from '../../types';
+import type { ProjectSummary, StorageEstimateInfo, UserProfile } from '../../types';
 import { exportProjectAsZip } from '../../services/exportService';
 
 interface DashboardViewProps {
   projects: ProjectSummary[];
   userProfile: UserProfile;
+  storageInfo?: StorageEstimateInfo | null;
   onOpenProject: (projectId: string) => void;
   onNewProjectClick: () => void;
   onOpenAccountClick: () => void;
@@ -45,6 +46,7 @@ type FilterCategory = 'all' | 'mine' | 'shared' | 'starred' | 'archive';
 export const DashboardView: React.FC<DashboardViewProps> = ({
   projects,
   userProfile,
+  storageInfo,
   onOpenProject,
   onNewProjectClick,
   onOpenAccountClick,
@@ -119,7 +121,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     setMenuOpenProjectId(null);
   };
 
-  const percentageUsed = Math.min(100, Math.round((userProfile.storageUsedMb / userProfile.storageLimitMb) * 100));
+  const percentageUsed = storageInfo
+    ? storageInfo.percentUsed
+    : Math.min(100, Math.round((userProfile.storageUsedMb / userProfile.storageLimitMb) * 100));
+
+  const storageDisplay = storageInfo
+    ? `${storageInfo.usageFormatted} / ${storageInfo.quotaFormatted}`
+    : `${userProfile.storageUsedMb} MB / 5 GB`;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
@@ -326,9 +334,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="pt-2 border-t border-slate-800/80 space-y-1.5">
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-slate-400 flex items-center gap-1">
-                  <HardDrive className="w-3 h-3 text-slate-500" /> Browser-Speicher
+                  <HardDrive className="w-3 h-3 text-slate-500" /> Browser-Speicher (IndexedDB)
                 </span>
-                <span className="text-slate-300 font-medium">{userProfile.storageUsedMb} MB / 5 GB</span>
+                <span className="text-slate-300 font-medium">{storageDisplay}</span>
               </div>
               <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
                 <div 

@@ -34,7 +34,8 @@ import type {
   DocumentComment,
   TrackChangeSuggestion,
   UserProfile,
-  ProjectSummary
+  ProjectSummary,
+  StorageEstimateInfo
 } from './types';
 import { IEEE_TEMPLATE } from './templates/latexTemplates';
 import { compileLatexProject, exportProjectAsPdf } from './services/compiler';
@@ -51,7 +52,10 @@ import {
   duplicateProject,
   deleteProject,
   toggleStarProject,
-  cleanupDuplicateProjects
+  cleanupDuplicateProjects,
+  getStorageEstimate,
+  migrateLocalStorageToIndexedDB,
+  getAllProjectsFromDB
 } from './services/projectStorage';
 import { isVaultLocked, setVaultLocked } from './services/passkeyService';
 import JSZip from 'jszip';
@@ -66,6 +70,38 @@ export const App: React.FC = () => {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [isLocked, setIsLocked] = useState<boolean>(() => isVaultLocked());
+  const [storageInfo, setStorageInfo] = useState<StorageEstimateInfo | null>(null);
+
+  // Dynamically update storage usage & quota from IndexedDB / navigator.storage
+  const updateStorageEstimate = useCallback(async () => {
+    try {
+      const estimate = await getStorageEstimate();
+      setStorageInfo(estimate);
+    } catch (err) {
+      console.warn('Failed to get storage estimate:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
+    updateStorageEstimate();
+  }, [projects, updateStorageEstimate]);
+
+  // Asynchronously migrate and sync projects from IndexedDB
+  useEffect(() => {
+    const initIndexedDb = async () => {
+      try {
+        await migrateLocalStorageToIndexedDB();
+        const dbProjects = await getAllProjectsFromDB();
+        if (dbProjects && dbProjects.length > 0) {
+          setProjects(dbProjects);
+        }
+      } catch (err) {
+        console.warn('IndexedDB initial sync failed:', err);
+      }
+    };
+    initIndexedDb();
+  }, []);
 
   const handleLockSession = () => {
     setVaultLocked(true);
@@ -609,6 +645,7 @@ export const App: React.FC = () => {
         <DashboardView
           projects={projects}
           userProfile={userProfile}
+          storageInfo={storageInfo}
           onOpenProject={handleOpenProjectFromDashboard}
           onNewProjectClick={() => setIsNewProjectModalOpen(true)}
           onOpenAccountClick={() => setIsAccountModalOpen(true)}
@@ -626,6 +663,7 @@ export const App: React.FC = () => {
           isOpen={isAccountModalOpen}
           onClose={() => setIsAccountModalOpen(false)}
           profile={userProfile}
+          storageInfo={storageInfo}
           onSaveProfile={handleSaveUserProfile}
           onLockSession={handleLockSession}
         />
@@ -840,6 +878,7 @@ export const App: React.FC = () => {
         isOpen={isAccountModalOpen}
         onClose={() => setIsAccountModalOpen(false)}
         profile={userProfile}
+        storageInfo={storageInfo}
         onSaveProfile={handleSaveUserProfile}
         onLockSession={handleLockSession}
       />

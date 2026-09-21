@@ -249,3 +249,13 @@ export interface CloudStorageConfig {
   localFolderHandleName?: string;
 }
 
+// Storage Quota & Metric Types
+export interface StorageEstimateInfo {
+  usageBytes: number;
+  quotaBytes: number;
+  usageFormatted: string;
+  quotaFormatted: string;
+  percentUsed: number;
+  isIndexedDbSupported: boolean;
+}
+

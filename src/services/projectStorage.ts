@@ -1,5 +1,14 @@
 import type { ProjectSummary, UserProfile } from '../types';
 import { ALL_TEMPLATES, IEEE_TEMPLATE, EXAM_TEMPLATE, THESIS_TEMPLATE } from '../templates/latexTemplates';
+import {
+  saveProjectsToDB,
+  setValInDB,
+  getStorageEstimate,
+  migrateLocalStorageToIndexedDB,
+  getAllProjectsFromDB,
+  formatBytes,
+  isIndexedDbSupported
+} from './indexedDbService';
 
 const STORAGE_PROJECTS_KEY = 'axiomtex_projects_v1';
 const STORAGE_PROFILE_KEY = 'axiomtex_user_profile_v1';
@@ -116,14 +125,19 @@ export function loadProjects(): ProjectSummary[] {
 }
 
 /**
- * Persists all projects to localStorage.
+ * Persists all projects to localStorage and IndexedDB.
  */
 export function saveProjects(projects: ProjectSummary[]): void {
   try {
     localStorage.setItem(STORAGE_PROJECTS_KEY, JSON.stringify(projects));
   } catch (err) {
-    console.error('Failed to save projects to localStorage:', err);
+    console.warn('LocalStorage save failed (quota exceeded or unavailable), relying on IndexedDB:', err);
   }
+
+  // Persist to IndexedDB asynchronously
+  saveProjectsToDB(projects).catch((err) => {
+    console.warn('Failed to save projects to IndexedDB:', err);
+  });
 }
 
 /**
@@ -170,17 +184,29 @@ export function loadUserProfile(): UserProfile {
   }
 }
 
-
 /**
- * Saves user profile to localStorage.
+ * Saves user profile to localStorage and IndexedDB.
  */
 export function saveUserProfile(profile: UserProfile): void {
   try {
     localStorage.setItem(STORAGE_PROFILE_KEY, JSON.stringify(profile));
   } catch (err) {
-    console.error('Failed to save user profile:', err);
+    console.warn('Failed to save user profile to localStorage:', err);
   }
+
+  // Persist to IndexedDB asynchronously
+  setValInDB('user_profile', profile).catch((err) => {
+    console.warn('Failed to save user profile to IndexedDB:', err);
+  });
 }
+
+export {
+  getStorageEstimate,
+  migrateLocalStorageToIndexedDB,
+  getAllProjectsFromDB,
+  formatBytes,
+  isIndexedDbSupported,
+};
 
 /**
  * Returns the currently active project ID.

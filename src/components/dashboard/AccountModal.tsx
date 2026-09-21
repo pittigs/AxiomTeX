@@ -21,7 +21,7 @@ import {
   CheckCircle2,
   RefreshCw
 } from 'lucide-react';
-import type { UserProfile } from '../../types';
+import type { StorageEstimateInfo, UserProfile } from '../../types';
 import { 
   getStoredPasskeys, 
   registerPasskey, 
@@ -34,6 +34,7 @@ interface AccountModalProps {
   isOpen: boolean;
   onClose: () => void;
   profile: UserProfile;
+  storageInfo?: StorageEstimateInfo | null;
   onSaveProfile: (updated: UserProfile) => void;
   onLockSession?: () => void;
 }
@@ -44,6 +45,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
   isOpen,
   onClose,
   profile,
+  storageInfo,
   onSaveProfile,
   onLockSession,
 }) => {
@@ -122,7 +124,13 @@ export const AccountModal: React.FC<AccountModalProps> = ({
     }, 700);
   };
 
-  const percentageUsed = Math.min(100, Math.round((formData.storageUsedMb / formData.storageLimitMb) * 100));
+  const percentageUsed = storageInfo
+    ? storageInfo.percentUsed
+    : Math.min(100, Math.round((formData.storageUsedMb / formData.storageLimitMb) * 100));
+
+  const storageDisplay = storageInfo
+    ? `${storageInfo.usageFormatted} von ${storageInfo.quotaFormatted} (${storageInfo.percentUsed}%)`
+    : `${formData.storageUsedMb} MB von ${formData.storageLimitMb} MB (${percentageUsed}%)`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
@@ -899,8 +907,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({
             <div className="space-y-5 animate-in fade-in duration-150">
               <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
                 <div className="flex items-center justify-between text-xs mb-2">
-                  <span className="font-semibold text-slate-300">Lokaler Browser-Speicher</span>
-                  <span className="text-slate-400">{formData.storageUsedMb} MB von {formData.storageLimitMb} MB ({percentageUsed}%)</span>
+                  <span className="font-semibold text-slate-300">Lokaler Browser-Speicher (IndexedDB)</span>
+                  <span className="text-slate-400">{storageDisplay}</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
                   <div 
@@ -909,7 +917,9 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                   />
                 </div>
                 <p className="text-[11px] text-slate-400 mt-2">
-                  Im On-Demand Modus werden alle Dokumente und Einstellungen lokal in IndexedDB / localStorage des Browsers gespeichert.
+                  {storageInfo?.isIndexedDbSupported
+                    ? 'AxiomTeX nutzt IndexedDB für unbegrenzte, persistente Dokumentenspeicherung direkt in deinem Browser mit dynamischem Quota-Monitoring.'
+                    : 'Im On-Demand Modus werden alle Dokumente und Einstellungen lokal im Browser gespeichert.'}
                 </p>
               </div>
 
