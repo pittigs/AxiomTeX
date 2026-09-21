@@ -1,5 +1,5 @@
 {
-  "name": "opentex",
+  "name": "axiomtex",
   "version": "1.0.0",
   "description": "Modern open-source LaTeX editor with real-time KaTeX preview, Monaco Editor, and AI-assisted scientific authoring.",
   "license": "MIT",
@@ -16,12 +16,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/pittigs/opentex.git"
+    "url": "https://github.com/pittigs/AxiomTeX.git"
   },
   "bugs": {
-    "url": "https://github.com/pittigs/opentex/issues"
+    "url": "https://github.com/pittigs/AxiomTeX/issues"
   },
-  "homepage": "https://github.com/pittigs/opentex#readme",
+  "homepage": "https://github.com/pittigs/AxiomTeX#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
