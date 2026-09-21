@@ -1,20 +1,27 @@
 import type { ProjectSummary, UserProfile } from '../types';
 import { ALL_TEMPLATES, IEEE_TEMPLATE, EXAM_TEMPLATE, THESIS_TEMPLATE } from '../templates/latexTemplates';
 
-const STORAGE_PROJECTS_KEY = 'opentex_projects_v1';
-const STORAGE_PROFILE_KEY = 'opentex_user_profile_v1';
-const STORAGE_ACTIVE_PROJECT_KEY = 'opentex_active_project_id_v1';
+const STORAGE_PROJECTS_KEY = 'axiomtex_projects_v1';
+const STORAGE_PROFILE_KEY = 'axiomtex_user_profile_v1';
+const STORAGE_ACTIVE_PROJECT_KEY = 'axiomtex_active_project_id_v1';
+
+const LEGACY_STORAGE_PROJECTS_KEY = 'opentex_projects_v1';
+const LEGACY_STORAGE_PROFILE_KEY = 'opentex_user_profile_v1';
+const LEGACY_STORAGE_ACTIVE_PROJECT_KEY = 'opentex_active_project_id_v1';
 
 export const DEFAULT_USER_PROFILE: UserProfile = {
-  id: 'usr-ondemand',
-  name: 'On-Demand Gast',
+  id: 'usr-admin',
+  name: 'Administrator',
+  username: 'admin',
   email: '',
-  avatar: 'OD',
-  role: 'On-Demand Autor',
-  affiliation: 'Lokal (Browser-Sitzung)',
+  avatar: 'AD',
+  role: 'Administrator',
+  isAdmin: true,
+  isSetupComplete: false,
+  affiliation: 'AxiomTeX Studio',
   orcid: '',
-  bio: 'Arbeitet lokal im On-Demand Browser-Modus. Keine Registrierung oder Server-Konto erforderlich.',
-  plan: 'OpenTeX On-Demand',
+  bio: 'Hauptverwalter dieser AxiomTeX-Instanz.',
+  plan: 'AxiomTeX On-Demand',
   storageUsedMb: 14.2,
   storageLimitMb: 5120, // 5 GB
   deploymentMode: 'on-demand',
@@ -42,7 +49,7 @@ export const DEFAULT_USER_PROFILE: UserProfile = {
 const INITIAL_PROJECTS: ProjectSummary[] = [
   {
     id: 'proj-crdt-ieee',
-    name: 'OpenTeX Publication (IEEE Template)',
+    name: 'AxiomTeX Publication (IEEE Template)',
     description: 'IEEE Transactions LaTeX Template mit 2-Spalten-Layout, Formeln, Tabellen und BibTeX.',
     category: 'Paper',
     lastModified: 'Gerade eben',
@@ -50,7 +57,7 @@ const INITIAL_PROJECTS: ProjectSummary[] = [
     isStarred: true,
     isArchived: false,
     isShared: false,
-    ownerId: 'usr-ondemand',
+    ownerId: 'usr-admin',
     files: IEEE_TEMPLATE.files,
     collaborators: [],
   },
@@ -64,7 +71,7 @@ const INITIAL_PROJECTS: ProjectSummary[] = [
     isStarred: true,
     isArchived: false,
     isShared: false,
-    ownerId: 'usr-ondemand',
+    ownerId: 'usr-admin',
     files: EXAM_TEMPLATE.files,
     collaborators: [],
   },
@@ -78,18 +85,21 @@ const INITIAL_PROJECTS: ProjectSummary[] = [
     isStarred: false,
     isArchived: false,
     isShared: false,
-    ownerId: 'usr-ondemand',
+    ownerId: 'usr-admin',
     files: THESIS_TEMPLATE.files,
     collaborators: [],
   },
 ];
 
 /**
- * Loads all projects from localStorage, falling back to initial projects.
+ * Loads all projects from localStorage, falling back to legacy keys or initial projects.
  */
 export function loadProjects(): ProjectSummary[] {
   try {
-    const raw = localStorage.getItem(STORAGE_PROJECTS_KEY);
+    let raw = localStorage.getItem(STORAGE_PROJECTS_KEY);
+    if (!raw) {
+      raw = localStorage.getItem(LEGACY_STORAGE_PROJECTS_KEY);
+    }
     if (!raw) {
       saveProjects(INITIAL_PROJECTS);
       return INITIAL_PROJECTS;
@@ -117,13 +127,15 @@ export function saveProjects(projects: ProjectSummary[]): void {
 }
 
 /**
- * Loads the user profile from localStorage.
+ * Loads the user profile from localStorage with backwards compatibility.
  */
 export function loadUserProfile(): UserProfile {
   try {
-    const raw = localStorage.getItem(STORAGE_PROFILE_KEY);
+    let raw = localStorage.getItem(STORAGE_PROFILE_KEY);
     if (!raw) {
-      saveUserProfile(DEFAULT_USER_PROFILE);
+      raw = localStorage.getItem(LEGACY_STORAGE_PROFILE_KEY);
+    }
+    if (!raw) {
       return DEFAULT_USER_PROFILE;
     }
     const parsed = JSON.parse(raw);
@@ -133,12 +145,12 @@ export function loadUserProfile(): UserProfile {
         ...DEFAULT_USER_PROFILE,
         ...parsed,
         id: parsed.id === 'usr-1' ? DEFAULT_USER_PROFILE.id : parsed.id,
-        name: parsed.name === 'Maximilian Müller' ? DEFAULT_USER_PROFILE.name : (parsed.name || DEFAULT_USER_PROFILE.name),
+        name: parsed.name === 'Maximilian Müller' ? 'On-Demand Gast' : (parsed.name || DEFAULT_USER_PROFILE.name),
         email: parsed.email === 'max.mueller@opentex.org' ? '' : (parsed.email || ''),
-        avatar: parsed.avatar === 'MM' ? 'OD' : (parsed.avatar || 'OD'),
+        avatar: parsed.avatar === 'MM' ? 'OD' : (parsed.avatar || DEFAULT_USER_PROFILE.avatar),
         role: parsed.role === 'Wissenschaftlicher Mitarbeiter / PhD Candidate' ? DEFAULT_USER_PROFILE.role : (parsed.role || DEFAULT_USER_PROFILE.role),
         affiliation: parsed.affiliation === 'Universität / Forschungsinstitut' ? DEFAULT_USER_PROFILE.affiliation : (parsed.affiliation || DEFAULT_USER_PROFILE.affiliation),
-        plan: parsed.plan === 'OpenTeX Academic Pro' ? 'OpenTeX On-Demand' : (parsed.plan || 'OpenTeX On-Demand'),
+        plan: (parsed.plan?.replace('OpenTeX', 'AxiomTeX') as any) || 'AxiomTeX On-Demand',
         gitUsername: parsed.gitUsername === 'pittigs' ? '' : (parsed.gitUsername || ''),
         gitEmail: parsed.gitEmail === 'max.mueller@opentex.org' ? '' : (parsed.gitEmail || ''),
         deploymentMode: parsed.deploymentMode || 'on-demand',
@@ -150,12 +162,14 @@ export function loadUserProfile(): UserProfile {
     return {
       ...DEFAULT_USER_PROFILE,
       ...parsed,
+      plan: (parsed.plan?.replace('OpenTeX', 'AxiomTeX') as any) || 'AxiomTeX On-Demand',
       onPremConfig: { ...DEFAULT_USER_PROFILE.onPremConfig, ...(parsed.onPremConfig || {}) }
     };
   } catch {
     return DEFAULT_USER_PROFILE;
   }
 }
+
 
 /**
  * Saves user profile to localStorage.
@@ -172,7 +186,13 @@ export function saveUserProfile(profile: UserProfile): void {
  * Returns the currently active project ID.
  */
 export function getActiveProjectId(): string {
-  return localStorage.getItem(STORAGE_ACTIVE_PROJECT_KEY) || INITIAL_PROJECTS[0].id;
+  try {
+    return localStorage.getItem(STORAGE_ACTIVE_PROJECT_KEY) || 
+           localStorage.getItem(LEGACY_STORAGE_ACTIVE_PROJECT_KEY) || 
+           INITIAL_PROJECTS[0].id;
+  } catch {
+    return INITIAL_PROJECTS[0].id;
+  }
 }
 
 /**
@@ -197,7 +217,7 @@ export function createProjectFromTemplate(templateId: string, customName?: strin
     isStarred: false,
     isArchived: false,
     isShared: false,
-    ownerId: 'usr-1',
+    ownerId: 'usr-admin',
     files: JSON.parse(JSON.stringify(template.files)),
     collaborators: [],
   };
@@ -215,15 +235,15 @@ export function createProjectFromTemplate(templateId: string, customName?: strin
 export function createEmptyProject(name: string, description?: string): ProjectSummary {
   const newProject: ProjectSummary = {
     id: `proj-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-    name: name || 'Neues LaTeX Dokument',
-    description: description || 'Eigenes leeres Dokument mit Standardpräambel.',
+    name: name || 'Neues Projekt',
+    description: description || 'Leeres LaTeX-Dokument.',
     category: 'General',
     lastModified: 'Gerade eben',
     updatedAt: Date.now(),
     isStarred: false,
     isArchived: false,
     isShared: false,
-    ownerId: 'usr-1',
+    ownerId: 'usr-admin',
     files: [
       {
         id: `file-${Date.now()}`,
@@ -239,14 +259,14 @@ export function createEmptyProject(name: string, description?: string): ProjectS
 \\geometry{margin=2.5cm}
 
 \\title{${name || 'Neues LaTeX Dokument'}}
-\\author{Maximilian Müller}
+\\author{Autor}
 \\date{\\today}
 
 \\begin{document}
 \\maketitle
 
 \\section{Einleitung}
-Willkommen in deinem neuen LaTeX-Dokument mit OpenTeX!
+Willkommen in deinem neuen LaTeX-Dokument mit AxiomTeX!
 
 \\end{document}
 `,

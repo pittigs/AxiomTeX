@@ -1,13 +1,14 @@
 import type { CloudStorageConfig, ProjectFile } from '../types';
 
-const CLOUD_CONFIG_KEY = 'opentex_cloud_storage_config';
+const CLOUD_CONFIG_KEY = 'axiomtex_cloud_storage_config';
+const LEGACY_CLOUD_CONFIG_KEY = 'opentex_cloud_storage_config';
 
 export const DEFAULT_CLOUD_CONFIG: CloudStorageConfig = {
   provider: 'google-drive',
   enabled: false,
   autoSync: false,
-  googleFolderName: 'OpenTeX_Projects',
-  webdavRemotePath: '/OpenTeX/'
+  googleFolderName: 'AxiomTeX_Projects',
+  webdavRemotePath: '/AxiomTeX/'
 };
 
 /**
@@ -15,7 +16,7 @@ export const DEFAULT_CLOUD_CONFIG: CloudStorageConfig = {
  */
 export function getCloudStorageConfig(): CloudStorageConfig {
   try {
-    const raw = localStorage.getItem(CLOUD_CONFIG_KEY);
+    const raw = localStorage.getItem(CLOUD_CONFIG_KEY) || localStorage.getItem(LEGACY_CLOUD_CONFIG_KEY);
     if (!raw) return DEFAULT_CLOUD_CONFIG;
     return { ...DEFAULT_CLOUD_CONFIG, ...JSON.parse(raw) };
   } catch (err) {
@@ -117,7 +118,7 @@ export async function syncToLocalDirectory(
 export function createProjectCloudPayload(projectName: string, files: ProjectFile[]): string {
   return JSON.stringify(
     {
-      appName: 'OpenTeX',
+      appName: 'AxiomTeX',
       version: '1.0.0',
       projectName,
       exportedAt: new Date().toISOString(),

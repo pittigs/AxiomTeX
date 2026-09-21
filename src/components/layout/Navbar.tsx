@@ -515,26 +515,37 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenAccount}
             className={`flex items-center space-x-1.5 px-2 py-1 rounded-xl border transition cursor-pointer ml-1 ${
-              userProfile.deploymentMode === 'on-premise'
+              userProfile.isAdmin
+                ? 'bg-amber-950/30 border-amber-600/40 hover:bg-amber-900/40 text-amber-300'
+                : userProfile.deploymentMode === 'on-premise'
                 ? 'bg-cyan-950/30 border-cyan-700/50 hover:bg-cyan-900/40 text-cyan-300'
                 : 'bg-indigo-950/30 border-indigo-700/40 hover:bg-indigo-900/40 text-indigo-300'
             }`}
             title={
-              userProfile.deploymentMode === 'on-premise'
+              userProfile.isAdmin
+                ? `👑 Administrator (@${userProfile.username || 'admin'}) • Klicke für Einstellungen`
+                : userProfile.deploymentMode === 'on-premise'
                 ? `🏢 On-Premises Server (${userProfile.onPremConfig?.serverUrl || 'Lokal'}) • Klicke für Einstellungen`
-                : '⚡ On-Demand Modus (Kein Login erforderlich • 100% lokal im Browser) • Klicke für Einstellungen'
+                : '⚡ On-Demand Modus • Klicke für Einstellungen'
             }
           >
             <div className={`w-5 h-5 rounded-md flex items-center justify-center font-bold text-[9px] text-white shadow ${
-              userProfile.deploymentMode === 'on-premise'
+              userProfile.isAdmin
+                ? 'bg-gradient-to-tr from-amber-500 to-indigo-600'
+                : userProfile.deploymentMode === 'on-premise'
                 ? 'bg-gradient-to-tr from-cyan-600 to-teal-400'
                 : 'bg-gradient-to-tr from-indigo-500 to-cyan-400'
             }`}>
-              {userProfile.avatar || (userProfile.deploymentMode === 'on-premise' ? 'OP' : 'OD')}
+              {userProfile.avatar || (userProfile.isAdmin ? 'AD' : userProfile.deploymentMode === 'on-premise' ? 'OP' : 'OD')}
             </div>
             <span className="text-[11px] font-medium hidden md:inline">
-              {userProfile.deploymentMode === 'on-premise' ? 'On-Premise' : 'On-Demand'}
+              {userProfile.isAdmin ? (userProfile.username ? `@${userProfile.username}` : 'Admin') : userProfile.deploymentMode === 'on-premise' ? 'On-Premise' : 'On-Demand'}
             </span>
+            {userProfile.isAdmin && (
+              <span className="text-[9px] font-black px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider hidden lg:inline">
+                Admin
+              </span>
+            )}
           </button>
         )}
 

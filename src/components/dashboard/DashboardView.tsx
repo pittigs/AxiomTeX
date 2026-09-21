@@ -281,8 +281,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Account & Profile Quick Card */}
           <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800/80 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">
-                {userProfile.deploymentMode === 'on-premise' ? '🏢 Server-Modus' : '⚡ On-Demand'}
+              <span className="text-[11px] font-bold uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
+                {userProfile.isAdmin ? (
+                  <span className="text-amber-400 flex items-center gap-1">👑 Administrator</span>
+                ) : userProfile.deploymentMode === 'on-premise' ? (
+                  '🏢 Server-Modus'
+                ) : (
+                  '⚡ On-Demand'
+                )}
               </span>
               <button
                 onClick={onOpenAccountClick}
@@ -294,18 +300,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="flex items-center space-x-3">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs text-white shadow ${
-                userProfile.deploymentMode === 'on-premise'
+                userProfile.isAdmin
+                  ? 'bg-gradient-to-tr from-amber-500 to-indigo-600'
+                  : userProfile.deploymentMode === 'on-premise'
                   ? 'bg-gradient-to-tr from-cyan-600 to-teal-400'
                   : 'bg-gradient-to-tr from-blue-500 to-indigo-600'
               }`}>
-                {userProfile.avatar || (userProfile.deploymentMode === 'on-premise' ? 'OP' : 'OD')}
+                {userProfile.avatar || (userProfile.isAdmin ? 'AD' : userProfile.deploymentMode === 'on-premise' ? 'OP' : 'OD')}
               </div>
               <div className="truncate">
-                <span className="block text-xs font-bold text-white truncate">{userProfile.name}</span>
+                <div className="flex items-center space-x-1.5">
+                  <span className="text-xs font-bold text-white truncate">{userProfile.name}</span>
+                  {userProfile.isAdmin && (
+                    <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+                      Admin
+                    </span>
+                  )}
+                </div>
                 <span className="block text-[11px] text-slate-400 truncate">
-                  {userProfile.deploymentMode === 'on-premise'
-                    ? (userProfile.onPremConfig?.serverUrl || 'On-Premises Server')
-                    : '100% lokal im Browser'}
+                  {userProfile.username ? `@${userProfile.username}` : (userProfile.deploymentMode === 'on-premise' ? (userProfile.onPremConfig?.serverUrl || 'On-Premises Server') : '100% lokal im Browser')}
                 </span>
               </div>
             </div>
@@ -329,13 +342,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Open Source / GitHub Footer */}
           <div className="mt-auto pt-4 border-t border-slate-900 flex items-center justify-between text-slate-400 text-xs">
             <a
-              href="https://github.com/pittigs/opentex"
+              href="https://github.com/pittigs/AxiomTeX"
               target="_blank"
               rel="noreferrer"
               className="flex items-center space-x-1.5 hover:text-white transition"
             >
               <GitBranch className="w-4 h-4" />
-              <span>OpenTeX GitHub</span>
+              <span>AxiomTeX GitHub</span>
             </a>
             <span className="text-[10px] text-slate-500 font-mono">v1.2</span>
           </div>

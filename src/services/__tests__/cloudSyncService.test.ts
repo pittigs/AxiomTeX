@@ -46,7 +46,7 @@ describe('cloudSyncService', () => {
 
     const payload = createProjectCloudPayload('Quantum Paper', files);
     const parsed = JSON.parse(payload);
-    expect(parsed.appName).toBe('OpenTeX');
+    expect(parsed.appName).toBe('AxiomTeX');
     expect(parsed.projectName).toBe('Quantum Paper');
     expect(parsed.files.length).toBe(1);
   });

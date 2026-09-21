@@ -23,7 +23,7 @@ export const CollabModal: React.FC<CollabModalProps> = ({
   onAddSimulatedCollaborator
 }) => {
   const [copied, setCopied] = useState(false);
-  const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/#room-science-2026` : 'https://opentex.org/room-science-2026';
+  const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/#room-science-2026` : 'https://axiomtex.org/room-science-2026';
 
   if (!isOpen) return null;
 
@@ -137,7 +137,7 @@ export const CollabModal: React.FC<CollabModalProps> = ({
               <span>Dezentrale CRDT Architektur</span>
             </div>
             <p className="text-slate-400 text-[10px] leading-relaxed">
-              OpenTeX nutzt Yjs Conflict-free Replicated Data Types (CRDTs). Selbst bei Netzwerkabbrüchen gehen keine Zeichen verloren und Änderungen werden nahtlos gemergt.
+              AxiomTeX nutzt Yjs Conflict-free Replicated Data Types (CRDTs). Selbst bei Netzwerkabbrüchen gehen keine Zeichen verloren und Änderungen werden nahtlos gemergt.
             </p>
           </div>
         </div>

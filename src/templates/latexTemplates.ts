@@ -25,7 +25,7 @@ export const IEEE_TEMPLATE: LaTeXTemplate = {
 
 \\begin{document}
 
-\\title{OpenTeX: A High-Performance Decentralized Open-Source Collaborative LaTeX Ecosystem}
+\\title{AxiomTeX: A High-Performance Decentralized Open-Source Collaborative LaTeX Ecosystem}
 
 \\author{Author~One,~\\IEEEmembership{Member,~IEEE,}
         Author~Two,~\\IEEEmembership{Senior~Member,~IEEE,}
@@ -35,12 +35,12 @@ export const IEEE_TEMPLATE: LaTeXTemplate = {
 }
 
 \\markboth{IEEE Transactions on Software Engineering,~Vol.~42, No.~8, 2026}%
-{Author \\MakeLowercase{\\textit{et al.}}: OpenTeX: High-Performance Open-Source Collaborative LaTeX}
+{Author \\MakeLowercase{\\textit{et al.}}: AxiomTeX: High-Performance Open-Source Collaborative LaTeX}
 
 \\maketitle
 
 \\begin{abstract}
-Collaborative scientific typesetting has long been dominated by centralized, expensive proprietary cloud platforms. This paper presents \\textbf{OpenTeX}, an open-source, hybrid WebAssembly-accelerated LaTeX collaborative environment. By delegating 92\\% of compilation workloads directly to client-side WebAssembly runtimes and synchronizing document state using Conflict-free Replicated Data Types (CRDTs), OpenTeX reduces server operating expenditures by over 88\\% while achieving sub-50ms keystroke-to-preview latency. We evaluate our architecture across 50,000 real-world academic papers, demonstrating complete syntax compatibility with full TeXLive distributions.
+Collaborative scientific typesetting has long been dominated by centralized, expensive proprietary cloud platforms. This paper presents \\textbf{AxiomTeX}, an open-source, hybrid WebAssembly-accelerated LaTeX collaborative environment. By delegating 92\\% of compilation workloads directly to client-side WebAssembly runtimes and synchronizing document state using Conflict-free Replicated Data Types (CRDTs), AxiomTeX reduces server operating expenditures by over 88\\% while achieving sub-50ms keystroke-to-preview latency. We evaluate our architecture across 50,000 real-world academic papers, demonstrating complete syntax compatibility with full TeXLive distributions.
 \\end{abstract}
 
 \\begin{IEEEkeywords}
@@ -102,7 +102,7 @@ Offline Capable & No & Yes & Full \\\\
 Our benchmark evaluates throughput and memory consumption across typical university workloads. As demonstrated in Table~\\ref{tab:perf}, our WASM-first approach achieves a $10\\times$ reduction in incremental compilation latency while preserving complete typographic fidelity.
 
 \\section{Conclusion}
-OpenTeX demonstrates that high-performance, cost-effective LaTeX collaboration is achievable through modern browser technologies and open-source standards. Future work will investigate distributed neural auto-completion for LaTeX mathematical formula synthesis.
+AxiomTeX demonstrates that high-performance, cost-effective LaTeX collaboration is achievable through modern browser technologies and open-source standards. Future work will investigate distributed neural auto-completion for LaTeX mathematical formula synthesis.
 
 \\bibliographystyle{IEEEtran}
 \\bibliography{references}
@@ -223,7 +223,7 @@ export const BEAMER_TEMPLATE: LaTeXTemplate = {
   title: 'Beamer Präsentation (Modern Slides)',
   description: 'Elegante Vortragsfolien mit Themenblöcken, Hervorhebungen, Formeln und 16:9 Breitbild-Format.',
   category: 'Slides',
-  author: 'OpenTeX Design Team',
+  author: 'AxiomTeX Design Team',
   icon: 'Presentation',
   files: [
     {
@@ -240,7 +240,7 @@ export const BEAMER_TEMPLATE: LaTeXTemplate = {
 \\usetheme{Madrid}
 \\usecolortheme{beaver}
 
-\\title{OpenTeX: Die Zukunft des kollaborativen LaTeX}
+\\title{AxiomTeX: Die Zukunft des kollaborativen LaTeX}
 \\subtitle{Client-Side WASM Compilation \\& CRDT-Synchronisation}
 \\author{Dr. Laura Bergmann \\and Jonas Keller}
 \\institute{Institut für Angewandte Informatik}
@@ -363,7 +363,7 @@ export const EXAM_TEMPLATE: LaTeXTemplate = {
   title: 'Universitäts-Klausur & Aufgabenblatt / Exam',
   description: 'Akademische Klausur- und Übungsvorlage für Hochschulen mit Aufgabenboxen, Deckblatt und Punkteverteilung.',
   category: 'CheatSheet',
-  author: 'OpenTeX Academic',
+  author: 'AxiomTeX Academic',
   icon: 'FileText',
   files: [
     {

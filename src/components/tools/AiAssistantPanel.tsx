@@ -362,7 +362,7 @@ High server expenditure and vendor lock-in present persistent hurdles in modern 
           </div>
 
           <div className="p-2.5 rounded-lg bg-indigo-950/30 border border-indigo-900/40 text-[10px] text-indigo-300">
-            OpenTeX sendet deinen Code niemals an Dritte. API-Keys werden ausschließlich verschlüsselt im lokalen Browser-Speicher abgelegt.
+            AxiomTeX sendet deinen Code niemals an Dritte. API-Keys werden ausschließlich verschlüsselt im lokalen Browser-Speicher abgelegt.
           </div>
         </div>
       )}

@@ -1,5 +1,5 @@
 /**
- * WebAuthn (FIDO2) / Passkey Service for OpenTeX
+ * WebAuthn (FIDO2) / Passkey Service for AxiomTeX
  * Provides biometric passwordless registration, authentication, session locking, and PIN fallback.
  */
 
@@ -10,9 +10,13 @@ export interface StoredPasskey {
   createdAt: string;
 }
 
-const STORAGE_PASSKEYS_KEY = 'opentex_passkeys_v1';
-const STORAGE_LOCK_KEY = 'opentex_vault_locked_v1';
-const STORAGE_PIN_KEY = 'opentex_pin_code_v1';
+const STORAGE_PASSKEYS_KEY = 'axiomtex_passkeys_v1';
+const STORAGE_LOCK_KEY = 'axiomtex_vault_locked_v1';
+const STORAGE_PIN_KEY = 'axiomtex_pin_code_v1';
+
+const LEGACY_STORAGE_PASSKEYS_KEY = 'opentex_passkeys_v1';
+const LEGACY_STORAGE_LOCK_KEY = 'opentex_vault_locked_v1';
+const LEGACY_STORAGE_PIN_KEY = 'opentex_pin_code_v1';
 
 // Helper: Convert Uint8Array to Base64URL string
 function bufferToBase64url(buffer: ArrayBuffer): string {
@@ -52,7 +56,7 @@ export function isPasskeySupported(): boolean {
  */
 export function getStoredPasskeys(): StoredPasskey[] {
   try {
-    const raw = localStorage.getItem(STORAGE_PASSKEYS_KEY);
+    const raw = localStorage.getItem(STORAGE_PASSKEYS_KEY) || localStorage.getItem(LEGACY_STORAGE_PASSKEYS_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -80,13 +84,13 @@ export async function registerPasskey(userName: string, userDisplayName: string,
   const creationOptions: PublicKeyCredentialCreationOptions = {
     challenge,
     rp: {
-      name: 'OpenTeX Workspace',
+      name: 'AxiomTeX Workspace',
       id: hostname === '127.0.0.1' ? 'localhost' : hostname,
     },
     user: {
       id: userId,
-      name: userName || 'user@opentex.org',
-      displayName: userDisplayName || 'OpenTeX Researcher',
+      name: userName || 'user@axiomtex.org',
+      displayName: userDisplayName || 'AxiomTeX Researcher',
     },
     pubKeyCredParams: [
       { type: 'public-key', alg: -7 },   // ES256
@@ -180,7 +184,7 @@ export function deletePasskey(id: string): StoredPasskey[] {
  * Checks if the vault is currently locked.
  */
 export function isVaultLocked(): boolean {
-  return localStorage.getItem(STORAGE_LOCK_KEY) === 'true';
+  return (localStorage.getItem(STORAGE_LOCK_KEY) || localStorage.getItem(LEGACY_STORAGE_LOCK_KEY)) === 'true';
 }
 
 /**
@@ -195,7 +199,7 @@ export function setVaultLocked(locked: boolean): void {
  * Default PIN is '1234' if none has been configured.
  */
 export function verifyPin(enteredPin: string): boolean {
-  const stored = localStorage.getItem(STORAGE_PIN_KEY) || '1234';
+  const stored = localStorage.getItem(STORAGE_PIN_KEY) || localStorage.getItem(LEGACY_STORAGE_PIN_KEY) || '1234';
   return enteredPin === stored;
 }
 
@@ -205,6 +209,8 @@ export function verifyPin(enteredPin: string): boolean {
 export function setPin(newPin: string): void {
   localStorage.setItem(STORAGE_PIN_KEY, newPin);
 }
+
+export const setStoredPin = setPin;
 
 function detectDeviceName(): string {
   const ua = navigator.userAgent;

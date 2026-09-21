@@ -126,13 +126,16 @@ export interface OnPremConfig {
 export interface UserProfile {
   id: string;
   name: string;
+  username?: string;
   email: string;
   avatar: string;
   role: string;
+  isAdmin?: boolean;
+  isSetupComplete?: boolean;
   affiliation: string;
   orcid?: string;
   bio?: string;
-  plan: 'OpenTeX Community' | 'OpenTeX Academic Pro' | 'Campus License' | 'OpenTeX On-Demand';
+  plan: 'AxiomTeX Community' | 'AxiomTeX Academic Pro' | 'Campus License' | 'AxiomTeX On-Demand' | 'OpenTeX Community' | 'OpenTeX Academic Pro' | 'OpenTeX On-Demand';
   storageUsedMb: number;
   storageLimitMb: number;
   deploymentMode: 'on-demand' | 'on-premise';

@@ -14,6 +14,7 @@ import { DashboardView } from './components/dashboard/DashboardView';
 import { AccountModal } from './components/dashboard/AccountModal';
 import { NewProjectModal } from './components/dashboard/NewProjectModal';
 import { LockScreen } from './components/auth/LockScreen';
+import { FirstLoginScreen } from './components/auth/FirstLoginScreen';
 import { TableEditorModal } from './components/modals/TableEditorModal';
 import { PlotGeneratorModal } from './components/modals/PlotGeneratorModal';
 import { CitationModal } from './components/modals/CitationModal';
@@ -79,7 +80,7 @@ export const App: React.FC = () => {
   const initialProject = projects.find((p) => p.id === activeProjectId) || projects[0];
 
   // 1. Project & File Management State
-  const [projectName, setProjectName] = useState(initialProject ? initialProject.name : 'OpenTeX Hybrid Paper');
+  const [projectName, setProjectName] = useState(initialProject ? initialProject.name : 'AxiomTeX Hybrid Paper');
   const [files, setFiles] = useState<ProjectFile[]>(initialProject ? initialProject.files : IEEE_TEMPLATE.files);
   const [activeFileId, setActiveFileId] = useState<string>(initialProject?.files[0]?.id || IEEE_TEMPLATE.files[0].id);
   const [currentTemplate, setCurrentTemplate] = useState<LaTeXTemplate>(IEEE_TEMPLATE);
@@ -583,6 +584,18 @@ export const App: React.FC = () => {
 
     setCollaborators((prev) => [...prev, newCollab]);
   };
+
+  // If first-time setup is not completed, render the FirstLoginScreen
+  if (!userProfile.isSetupComplete) {
+    return (
+      <FirstLoginScreen
+        onComplete={(newProfile) => {
+          saveUserProfile(newProfile);
+          setUserProfile(newProfile);
+        }}
+      />
+    );
+  }
 
   // If session is locked, render the biometric LockScreen
   if (isLocked) {

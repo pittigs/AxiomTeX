@@ -85,15 +85,29 @@ export const LockScreen: React.FC<LockScreenProps> = ({
         </p>
 
         {/* User Card */}
-        <div className="mt-5 mb-6 w-full p-3 rounded-2xl bg-slate-950/80 border border-slate-800/80 flex items-center space-x-3 text-left">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-sm text-white shadow shrink-0">
-            {userProfile.avatar || 'MM'}
+        <div className="mt-5 mb-6 w-full p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800/80 flex items-center space-x-3 text-left">
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-sm text-white shadow shrink-0 relative">
+            {userProfile.avatar || 'AD'}
+            {userProfile.isAdmin && (
+              <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[9px] font-black" title="Administrator">
+                ★
+              </span>
+            )}
           </div>
           <div className="truncate flex-1">
-            <span className="block text-xs font-bold text-white truncate">{userProfile.name}</span>
-            <span className="block text-[11px] text-slate-400 truncate">{userProfile.affiliation || userProfile.email}</span>
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xs font-bold text-white truncate">{userProfile.name}</span>
+              {userProfile.isAdmin && (
+                <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+                  Admin
+                </span>
+              )}
+            </div>
+            <span className="block text-[11px] text-slate-400 truncate">
+              {userProfile.username ? `@${userProfile.username}` : (userProfile.affiliation || userProfile.email)}
+            </span>
           </div>
-          <div className="p-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" title="Verifiziert">
+          <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" title="Verifiziert">
             <ShieldCheck className="w-4 h-4" />
           </div>
         </div>

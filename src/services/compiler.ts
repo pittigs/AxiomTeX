@@ -92,7 +92,7 @@ export function exportProjectAsPdf(title: string, content: string) {
     
     // Add raw or simplified body
     const cleanLines = content.split('\n').filter(l => !l.startsWith('\\')).slice(0, 50);
-    doc.text(cleanLines.join('\n') || 'OpenTeX Generiertes PDF Dokument', 20, 38, { maxWidth: 170 });
+    doc.text(cleanLines.join('\n') || 'AxiomTeX Generiertes PDF Dokument', 20, 38, { maxWidth: 170 });
 
     doc.save(`${(title || 'latex_dokument').toLowerCase().replace(/[^a-z0-9]/g, '_')}.pdf`);
   } catch (err) {

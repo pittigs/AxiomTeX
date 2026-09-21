@@ -15,7 +15,7 @@ export async function exportProjectAsZip(files: ProjectFile[], projectName: stri
   });
 
   const blob = await zip.generateAsync({ type: 'blob' });
-  const safeName = projectName.toLowerCase().replace(/[^a-z0-9]/g, '_') || 'opentex_project';
+  const safeName = projectName.toLowerCase().replace(/[^a-z0-9]/g, '_') || 'axiomtex_project';
   saveAs(blob, `${safeName}_source.zip`);
 }
 

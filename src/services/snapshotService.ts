@@ -1,13 +1,15 @@
 import type { DiffLine, ProjectFile, ProjectSnapshot } from '../types';
 
-const SNAPSHOTS_STORAGE_KEY_PREFIX = 'opentex_snapshots_';
+const SNAPSHOTS_STORAGE_KEY_PREFIX = 'axiomtex_snapshots_';
+const LEGACY_SNAPSHOTS_STORAGE_KEY_PREFIX = 'opentex_snapshots_';
 
 /**
  * Gets all saved snapshots for a given project ID
  */
 export function getProjectSnapshots(projectId: string): ProjectSnapshot[] {
   try {
-    const raw = localStorage.getItem(`${SNAPSHOTS_STORAGE_KEY_PREFIX}${projectId}`);
+    const raw = localStorage.getItem(`${SNAPSHOTS_STORAGE_KEY_PREFIX}${projectId}`) ||
+                localStorage.getItem(`${LEGACY_SNAPSHOTS_STORAGE_KEY_PREFIX}${projectId}`);
     if (!raw) return [];
     return JSON.parse(raw) as ProjectSnapshot[];
   } catch (err) {

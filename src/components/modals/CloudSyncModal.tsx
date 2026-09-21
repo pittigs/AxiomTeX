@@ -169,7 +169,7 @@ const CloudSyncModalContent: React.FC<CloudSyncModalProps> = ({
           onImportProjectFiles(parsed.files);
           showStatus('success', `Projekt erfolgreich importiert (${parsed.files.length} Dateien).`);
         } else {
-          showStatus('error', 'Ungültiges OpenTeX-Backup-Format.');
+          showStatus('error', 'Ungültiges AxiomTeX-Backup-Format.');
         }
       } catch {
         showStatus('error', 'Konnte Datei nicht als JSON parsen.');
@@ -290,7 +290,7 @@ const CloudSyncModalContent: React.FC<CloudSyncModalProps> = ({
                   </span>
                 </div>
                 <p className="text-xs text-slate-400">
-                  Speichere deine LaTeX-Quelltexte und Backups direkt in deinem privaten Google Drive. Bei Overleaf kostet dies mind. 15€/Monat – bei OpenTeX kostenlos und clientseitig.
+                  Speichere deine LaTeX-Quelltexte und Backups direkt in deinem privaten Google Drive. Bei Overleaf kostet dies mind. 15€/Monat – bei AxiomTeX kostenlos und clientseitig.
                 </p>
 
                 <div className="space-y-3 pt-2">
@@ -316,8 +316,8 @@ const CloudSyncModalContent: React.FC<CloudSyncModalProps> = ({
                     </label>
                     <input
                       type="text"
-                      placeholder="OpenTeX_Projects"
-                      value={config.googleFolderName || 'OpenTeX_Projects'}
+                      placeholder="AxiomTeX_Projects"
+                      value={config.googleFolderName || 'AxiomTeX_Projects'}
                       onChange={e => setConfig({ ...config, googleFolderName: e.target.value })}
                       className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-blue-500"
                     />
@@ -496,7 +496,7 @@ const CloudSyncModalContent: React.FC<CloudSyncModalProps> = ({
                       <span>Backup-Datei wiederherstellen</span>
                     </div>
                     <p className="text-xs text-slate-400 mb-4">
-                      Importiere ein zuvor exportiertes OpenTeX-Projektarchiv direkt in diesen Workspace.
+                      Importiere ein zuvor exportiertes AxiomTeX-Projektarchiv direkt in diesen Workspace.
                     </p>
                   </div>
                   <label className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition flex items-center justify-center space-x-2 cursor-pointer shadow">

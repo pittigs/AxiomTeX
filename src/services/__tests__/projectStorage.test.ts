@@ -24,7 +24,7 @@ describe('projectStorage', () => {
       const profile = loadUserProfile();
       expect(profile.name).toBe(DEFAULT_USER_PROFILE.name);
       expect(profile.deploymentMode).toBe('on-demand');
-      expect(profile.avatar).toBe('OD');
+      expect(profile.avatar).toBe(DEFAULT_USER_PROFILE.avatar);
     });
 
     it('saves and reloads modified on-premises user profile', () => {

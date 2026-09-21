@@ -1,5 +1,5 @@
 /**
- * Citation & Bibliography Service for OpenTeX
+ * Citation & Bibliography Service for AxiomTeX
  * Fetches BibTeX from DOI / arXiv and provides automated citation auditing.
  */
 

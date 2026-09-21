@@ -30,7 +30,7 @@ export const GitModal: React.FC<GitModalProps> = ({
   onCommitAndPush,
   onPullChanges
 }) => {
-  const [remoteUrl, setRemoteUrl] = useState(gitConfig.remoteUrl || 'https://gitlab.tu-berlin.de/research/opentex-paper.git');
+  const [remoteUrl, setRemoteUrl] = useState(gitConfig.remoteUrl || 'https://gitlab.tu-berlin.de/research/axiomtex-paper.git');
   const [branch, setBranch] = useState(gitConfig.branch || 'main');
   const [token, setToken] = useState(gitConfig.token || '');
   const [authorName] = useState(gitConfig.authorName || 'Alexander Musterstudent');

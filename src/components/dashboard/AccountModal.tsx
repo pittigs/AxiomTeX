@@ -73,7 +73,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
     setPasskeyError(null);
     setPasskeyLoading(true);
     try {
-      await registerPasskey(formData.email || 'gast@lokal.opentex', formData.name || 'Lokaler Nutzer');
+      await registerPasskey(formData.email || 'admin@axiomtex.local', formData.name || 'AxiomTeX Nutzer');
       setPasskeys(getStoredPasskeys());
     } catch (err: any) {
       setPasskeyError(err.message || 'Passkey-Registrierung fehlgeschlagen.');
@@ -142,17 +142,24 @@ export const AccountModal: React.FC<AccountModalProps> = ({
             </div>
             <div>
               <h2 className="text-base font-bold text-white flex items-center gap-2">
-                {formData.name || 'OpenTeX Einstellungen'}
-                <span className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full border ${
-                  formData.deploymentMode === 'on-premise'
-                    ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'
-                    : 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
-                }`}>
-                  {formData.deploymentMode === 'on-premise' ? '🏢 On-Premises' : '⚡ On-Demand'}
-                </span>
+                {formData.name || 'AxiomTeX Einstellungen'}
+                {formData.isAdmin ? (
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border bg-amber-500/20 text-amber-300 border-amber-500/30 flex items-center gap-1">
+                    👑 Administrator
+                  </span>
+                ) : (
+                  <span className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full border ${
+                    formData.deploymentMode === 'on-premise'
+                      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'
+                      : 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
+                  }`}>
+                    {formData.deploymentMode === 'on-premise' ? '🏢 On-Premises' : '⚡ On-Demand'}
+                  </span>
+                )}
               </h2>
               <p className="text-xs text-slate-400">
-                {formData.email || (formData.deploymentMode === 'on-premise' ? 'Self-Hosted Server Konfiguration' : 'Kein Account erforderlich • Lokale Browser-Sitzung')}
+                {formData.username ? `@${formData.username} • ` : ''}
+                {formData.email || (formData.isAdmin ? 'Hauptverwalter dieser AxiomTeX-Instanz' : formData.deploymentMode === 'on-premise' ? 'Self-Hosted Server Konfiguration' : 'Kein Account erforderlich • Lokale Browser-Sitzung')}
               </p>
             </div>
           </div>
@@ -257,7 +264,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                     Betriebs- & Deployment-Modus
                   </h3>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Wähle, ob OpenTeX im On-Demand Web-Modus oder mit einem eigenen On-Premises Server verbunden betrieben werden soll.
+                    Wähle, ob AxiomTeX im On-Demand Web-Modus oder mit einem eigenen On-Premises Server verbunden betrieben werden soll.
                   </p>
                 </div>
 
@@ -268,7 +275,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                       setFormData({
                         ...formData,
                         deploymentMode: 'on-demand',
-                        plan: 'OpenTeX On-Demand',
+                        plan: 'AxiomTeX On-Demand',
                       });
                     }}
                     className={`p-3.5 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between ${
@@ -299,7 +306,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                       setFormData({
                         ...formData,
                         deploymentMode: 'on-premise',
-                        plan: 'OpenTeX Academic Pro',
+                        plan: 'AxiomTeX Academic Pro',
                       });
                     }}
                     className={`p-3.5 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between ${
@@ -550,7 +557,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                     <Sparkles className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                     <div>
                       <span className="font-semibold block text-white">⚡ On-Demand Modus aktiv (Kein Login erforderlich)</span>
-                      <span>Du nutzt OpenTeX direkt im Browser ohne Account. Angaben sind optional und dienen dazu, deinen Autorennamen und deine Affiliation in wissenschaftlichen Vorlagen und PDF-Exporten automatisch einzusetzen.</span>
+                      <span>Du nutzt AxiomTeX direkt im Browser. Angaben sind optional und dienen dazu, deinen Autorennamen und deine Affiliation in wissenschaftlichen Vorlagen und PDF-Exporten automatisch einzusetzen.</span>
                     </div>
                   </>
                 ) : (
@@ -652,7 +659,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 <div>
                   <span className="font-semibold text-slate-200">Git & Self-Hosted Repositories</span>
                   <p className="mt-0.5 leading-relaxed">
-                    Verbinde OpenTeX mit GitHub, GitLab oder einem internen On-Premises Gitea/GitLab-Server, um Versionen zu synchronisieren und Commits zu signieren.
+                    Verbinde AxiomTeX mit GitHub, GitLab oder einem internen On-Premises Gitea/GitLab-Server, um Versionen zu synchronisieren und Commits zu signieren.
                   </p>
                 </div>
               </div>
@@ -869,7 +876,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                       Sitzung jetzt sperren
                     </h3>
                     <p className="text-[11px] text-slate-300 mt-0.5">
-                      Sperrt den OpenTeX-Workspace sofort. Entsperrung via Passkey oder PIN.
+                      Sperrt den AxiomTeX-Workspace sofort. Entsperrung via Passkey oder PIN.
                     </p>
                   </div>
                   <button

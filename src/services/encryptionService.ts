@@ -1,5 +1,5 @@
 /**
- * End-to-End Encryption Service for OpenTeX
+ * End-to-End Encryption Service for AxiomTeX
  * Uses Web Crypto API (AES-256-GCM + PBKDF2) for client-side encryption of project files.
  */
 

@@ -50,7 +50,7 @@ describe('passkeyService', () => {
         { id: 'key-1', rawId: 'raw1', name: 'Device 1', createdAt: '01.01.2026' },
         { id: 'key-2', rawId: 'raw2', name: 'Device 2', createdAt: '02.01.2026' },
       ];
-      localStorage.setItem('opentex_passkeys_v1', JSON.stringify(mockKeys));
+      localStorage.setItem('axiomtex_passkeys_v1', JSON.stringify(mockKeys));
 
       const updated = deletePasskey('key-1');
       expect(updated).toHaveLength(1);
